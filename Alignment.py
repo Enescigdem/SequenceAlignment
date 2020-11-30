@@ -144,6 +144,8 @@ def needlemanwunsch(sequence1, sequence2, scoredict, gap_open_penalty, gap_exten
     print("".join(match_mismatchline))
     print("".join(thirdline))
     i, j = len(sequence1), len(sequence2)
+    outfile.write("Raw alignment score  :{} \n".format(alignment_matrix[-1][-1]))
+    print("Raw alignment score  :{} \n".format(alignment_matrix[-1][-1]))
     outfile.write("Match rate :{} percent \n".format(match_count * 100 / len(firstline)))
     print("Match rate :{} percent".format(match_count * 100 / len(firstline)))
     outfile.write("{} matches {} insertion-deletions in aligned sequence \n".format(match_num, indel_num))
@@ -169,7 +171,6 @@ def smithwaterman(sequence1, sequence2, scoredict, gap_open_penalty, gap_extensi
                                                                 gap_extension_penalty, sequence1, sequence2, "local")
 
             trace[i, j] = trace_index
-
     max = 0
     for irow in range(len(alignment_matrix)):
         for icol in range(len(alignment_matrix[0])):
@@ -231,6 +232,8 @@ def smithwaterman(sequence1, sequence2, scoredict, gap_open_penalty, gap_extensi
     outfile.write("\n")
     outfile.write("".join(thirdline))
     outfile.write("\n")
+    outfile.write("Raw alignment score  :{} \n".format(max))
+    print("Raw alignment score  :{} \n".format(max))
     outfile.write("Match rate :{} percent \n".format(local_match_count * 100 / len(firstline)))
     print("Match rate :{} percent".format(local_match_count * 100 / len(firstline)))
     outfile.write("{} matches {} insertion-deletions in aligned sequence \n".format(match_num, indel_num))
@@ -240,18 +243,18 @@ def smithwaterman(sequence1, sequence2, scoredict, gap_open_penalty, gap_extensi
 
 def main():
 
-    output = open("Different_parameter_Alignments.txt","a")
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--method', type=str, default="local", help='global or local')
-    parser.add_argument('--scoringmatrix_filepath', type=str, default="BLOSUM62.txt", help='Matrix txt path to be used')
+    parser.add_argument('--scoringmatrix_filepath', type=str, default="IDENTITY.txt", help='Matrix txt path to be used')
     parser.add_argument('--input_path', type=str, default="alignment_input.txt",
                         help='txt file path of input sequences  to be used')
 
     parser.add_argument('--gap_extension_penalty', type=int, default=-8)
     parser.add_argument('--gap_open_penalty', type=int, default=-8)
-
+    parser.add_argument('--outfile', type=str, default="Different_parameter_Alignments.txt")
     opt = parser.parse_args()
-
+    output = open(opt.outfile, "a")
     output.write(opt.method+"\n")
     output.write(opt.scoringmatrix_filepath+"\n")
 
@@ -274,4 +277,3 @@ def main():
     output.close()
 
 main()
-
